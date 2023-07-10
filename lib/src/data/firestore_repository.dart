@@ -15,6 +15,7 @@ class FirestoreRepository {
         {
           'title': title,
           'company': company,
+          'createdAt':FieldValue.serverTimestamp(),
         },
       );
 
@@ -43,7 +44,7 @@ class FirestoreRepository {
             return Job.fromMap(snapshot.data()!);
           }),
           toFirestore: (job, _) => job.toMap(),
-        );
+        ).orderBy('createdAt', descending: true);
   }
 }
 
