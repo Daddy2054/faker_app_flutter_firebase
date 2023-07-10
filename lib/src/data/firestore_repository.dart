@@ -11,34 +11,39 @@ class FirestoreRepository {
     String title,
     String company,
   ) =>
-      _firestore.collection('jobs').add(
+      _firestore.collection('users/$uid/jobs').add(
         {
-          'uid': uid,
           'title': title,
           'company': company,
         },
       );
 
   Future<void> updateJob(
-          String uid, String jobId, String title, String company) =>
-      _firestore.doc('jobs/$jobId').update(
+    String uid,
+    String jobId,
+    String title,
+    String company,
+  ) =>
+      _firestore.doc('users/$uid/jobs/$jobId').update(
         {
-          'uid': uid,
           'title': title,
           'company': company,
         },
       );
 
-  Future<void> deleteJob(String uid, String jobId) =>
-      _firestore.doc('jobs/$jobId').delete();
+  Future<void> deleteJob(
+    String uid,
+    String jobId,
+  ) =>
+      _firestore.doc('users/$uid/jobs/$jobId').delete();
 
   Query<Job> jobsQuery(String uid) {
-    return _firestore.collection('jobs').withConverter(
+    return _firestore.collection('users/$uid/jobs').withConverter(
           fromFirestore: ((snapshot, _) {
             return Job.fromMap(snapshot.data()!);
           }),
           toFirestore: (job, _) => job.toMap(),
-        ).where('uid',isEqualTo: uid);
+        );
   }
 }
 
